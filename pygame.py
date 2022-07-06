@@ -5,17 +5,27 @@ import random
 # creates the window
 window = turtle.Screen()
 window.title('Dodge the Object')
-window.bgcolor(0, 0, 0)
+window.bgpic('space_bg.gif')
 window.setup(width = 800, height = 600)
 window.tracer(0)
-window.register_shape("alien_ship.gif")
+window.register_shape("alien.gif")
+window.register_shape("fire.gif")
 
 # space ship object
 space_ship = turtle.Turtle()
-space_ship.shape("alien_ship.gif")
+space_ship.shape("alien.gif")
 space_ship.color("white")
 space_ship.penup()
-space_ship.goto(0,-250)
+space_ship.goto(0, 0)
+space_ship.speed(5)
+
+# meteor object
+meteor = turtle.Turtle()
+meteor.shape("fire.gif")
+meteor.penup()
+# random x coordinate to get spawned into
+random_x = random.randint(-400, 400)
+meteor.goto(random_x, 300)
 
 # adds movement to the right
 def move_right():
@@ -50,3 +60,18 @@ window.onkeypress(move_down, "s")
 
 while True:
     window.update()
+
+    # sets a speed up for the meteor to fly down
+    old_meteor_y = meteor.ycor()
+    new_meteor_y = old_meteor_y - 0.1
+    meteor.sety(new_meteor_y)
+
+    # this gives us a new random x value for the meteor
+    new_random_x = random.randint(-400, 400)
+    # respawns the fireball at a new location
+    if meteor.ycor() < -300:
+        meteor.goto(new_random_x, 300)
+
+    if space_ship.distance(meteor) < 25:
+        print("You Lost")
+        window.resetscreen()
